@@ -1,0 +1,69 @@
+---
+title: "raster-to-vector"
+author: "Anna Talucci"
+date: "1/7/2020"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+# Raster to vector for FLARE project fire perimeters
+
+
+# Load Packages
+```{r, include=FALSE}
+library(sp) # spatial data
+library(rgdal) # geospatial data
+library(raster) # deals with rasters
+library(landsat) # processes landsat images
+library(rgeos) # GIS Geometry
+library(foreign) # deals with dbf files
+library(SDMTools) #Species distribution model tools for patch metrics
+library(dplyr)
+```
+
+
+# Data
+
+Read in data and veiw data.
+```{r}
+binary = raster("../rasters/Fire-binary.tif")
+
+cellStats(binary, 'min')#returns the minimum cell value -439.9731
+cellStats(binary, 'max')#returns the maximum cell value 1141.094
+
+summary(binary)
+structure(binary)
+```
+
+
+```{r}
+plot(binary)
+```
+
+```{r}
+erode = raster("../rasters/Fire-erodedFunction1.tif")
+
+cellStats(erode, 'min')#returns the minimum cell value -439.9731
+cellStats(erode, 'max')#returns the maximum cell value 1141.094
+
+summary(erode)
+structure(erode)
+```
+
+
+```{r}
+plot(erode)
+```
+
+
+```{r}
+polyTest = rasterToPolygons(erode, fun=function(x){x==1}, n = 16, digits = 12)
+```
+
+```{r}
+plot(polyTest)
+```
+
